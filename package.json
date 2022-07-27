@@ -2,8 +2,10 @@
   "name": "algorithmssite-page",
   "version": "1.0.0",
   "private": true,
+  "homepage":"https://algorithmssite.github.io",
   "scripts": {
-    "deploy": "npm buid && gh-pages -d public -b main",
+    "predeploy": "npm buid",
+    "deploy": "gh-pages -d public -b main",
     "start": "rollup -c -w",
     "build": "rollup -c"
   },
