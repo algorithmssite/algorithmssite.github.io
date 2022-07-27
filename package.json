@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "deploy": "gh-pages -d public",
+    "deploy": "gh-pages -d public -b main",
     "start": "rollup -c -w",
     "build": "rollup -c"
   },
