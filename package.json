@@ -4,7 +4,7 @@
   "private": true,
   "homepage":"https://algorithmssite.github.io",
   "scripts": {
-    "predeploy": "npm build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d public -b main",
     "start": "rollup -c -w",
     "build": "rollup -c"
