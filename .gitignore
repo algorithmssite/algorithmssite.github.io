@@ -1,6 +1,0 @@
-/target
-/node_modules
-/scripts
-/Cargo.lock
-/package-lock.json
-inside.txt
