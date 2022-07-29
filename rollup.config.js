@@ -13,12 +13,11 @@ export default {
     dir: "public/js",
     format: 'esm',
     sourcemap: false,
-
   },
   plugins: [
     copy({
       targets: [
-        { src: "assets/templates/index.html", dest: "public" },
+        { src: "assets/index.html", dest: "public" },
         { src: "assets/images", dest: "public/" },
       ]
     }),
