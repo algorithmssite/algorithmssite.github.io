@@ -26,7 +26,7 @@ impl Component for Header {
         html! {
           <header>
             <ul>
-              <li> <button class="custom-button-flat pulse-info">
+              <li> <button class="custom-button-flat-select pulse-info">
                 <span> {"Home"} </span>
               </button> </li>
 
