@@ -1,3 +1,6 @@
+$normal-color: rgba(170, 198, 188, 0.7)
+$contra-color: rgba(178, 206, 196, 0.7)
+
 body
   padding: 0px
   margin: 0px
@@ -6,19 +9,29 @@ body
   background-color: rgba(228, 228, 228, 0.5)
 
 header
-  display: inline // scroll 0, block (At scroll top)
+  top: 0
+  display: flex
+  position: fixed
+  align-items: center
+  align-content: center
+  justify-content: space-between
   background-color: rgba(170, 198, 188, 0.7)
+  width: 100%
+
+  img
+    margin-left: 20px
 
   ul
     list-style: none
     padding-inline-start: 0px
     margin-inline-start: 0px
     display: inline-flex
-    justify-content: space-around
-    align-content: center
+    justify-content: space-between
     flex-direction: row
-    align-items: flex-end
-    width: 100%
+    //padding: 0px 50px 0px 50px
+    margin-right: 20px
+    width: 30%
+
 
 @mixin button-mixin($box: none)
   font-family: 'Open Sans', Helvetica, Arial, sans-serif
@@ -55,10 +68,10 @@ header
   @include button-mixin($box: rgb(150, 120, 120) 5px 5px 10px 5px)
 
 .custom-button-flat-select
-  @include button-mixin($box: rgb(180, 140, 150) 5px 5px 10px 5px)
+  @include button-mixin($box: rgb(120, 148, 138) 2px 2px 5px 2px)
 
 .pulse-info:hover
-  box-shadow: rgb(120, 119, 150) 5px 5px 10px 5px
+  box-shadow: rgb(150, 120, 120) 2px 2px 5px 2px
 
 nav
   width: 100%
