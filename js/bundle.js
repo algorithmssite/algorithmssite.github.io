@@ -31,6 +31,23 @@ function takeObject(idx) {
     return ret;
 }
 
+const cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
+
+cachedTextDecoder.decode();
+
+let cachedUint8Memory0 = new Uint8Array();
+
+function getUint8Memory0() {
+    if (cachedUint8Memory0.byteLength === 0) {
+        cachedUint8Memory0 = new Uint8Array(wasm.memory.buffer);
+    }
+    return cachedUint8Memory0;
+}
+
+function getStringFromWasm0(ptr, len) {
+    return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
+}
+
 function addHeapObject(obj) {
     if (heap_next === heap.length) heap.push(heap.length + 1);
     const idx = heap_next;
@@ -60,23 +77,6 @@ function getInt32Memory0() {
         cachedInt32Memory0 = new Int32Array(wasm.memory.buffer);
     }
     return cachedInt32Memory0;
-}
-
-const cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
-
-cachedTextDecoder.decode();
-
-let cachedUint8Memory0 = new Uint8Array();
-
-function getUint8Memory0() {
-    if (cachedUint8Memory0.byteLength === 0) {
-        cachedUint8Memory0 = new Uint8Array(wasm.memory.buffer);
-    }
-    return cachedUint8Memory0;
-}
-
-function getStringFromWasm0(ptr, len) {
-    return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
 }
 
 function debugString(val) {
@@ -220,8 +220,8 @@ function makeClosure(arg0, arg1, dtor, f) {
 
     return real;
 }
-function __wbg_adapter_18(arg0, arg1, arg2) {
-    wasm._dyn_core__ops__function__Fn__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hdbf53dfde1fbba7d(arg0, arg1, addHeapObject(arg2));
+function __wbg_adapter_20(arg0, arg1, arg2) {
+    wasm._dyn_core__ops__function__Fn__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hacddaf00cbcb61e7(arg0, arg1, addHeapObject(arg2));
 }
 
 /**
@@ -254,6 +254,44 @@ function handleError(f, args) {
         return f.apply(this, args);
     } catch (e) {
         wasm.__wbindgen_exn_store(addHeapObject(e));
+    }
+}
+/**
+*/
+class ScrollState {
+
+    static __wrap(ptr) {
+        const obj = Object.create(ScrollState.prototype);
+        obj.ptr = ptr;
+
+        return obj;
+    }
+
+    __destroy_into_raw() {
+        const ptr = this.ptr;
+        this.ptr = 0;
+
+        return ptr;
+    }
+
+    free() {
+        const ptr = this.__destroy_into_raw();
+        wasm.__wbg_scrollstate_free(ptr);
+    }
+    /**
+    */
+    update() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.scrollstate_update(retptr, this.ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            if (r1) {
+                throw takeObject(r0);
+            }
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
     }
 }
 
@@ -294,6 +332,17 @@ function getImports() {
     imports.wbg.__wbindgen_object_drop_ref = function(arg0) {
         takeObject(arg0);
     };
+    imports.wbg.__wbg_log_dccaa2bc9993fe59 = function(arg0, arg1) {
+        console.log(getStringFromWasm0(arg0, arg1));
+    };
+    imports.wbg.__wbindgen_string_new = function(arg0, arg1) {
+        const ret = getStringFromWasm0(arg0, arg1);
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_scrollstate_new = function(arg0) {
+        const ret = ScrollState.__wrap(arg0);
+        return addHeapObject(ret);
+    };
     imports.wbg.__wbindgen_object_clone_ref = function(arg0) {
         const ret = getObject(arg0);
         return addHeapObject(ret);
@@ -303,10 +352,6 @@ function getImports() {
         const ret = typeof(obj) === 'number' ? obj : undefined;
         getFloat64Memory0()[arg0 / 8 + 1] = isLikeNone(ret) ? 0 : ret;
         getInt32Memory0()[arg0 / 4 + 0] = !isLikeNone(ret);
-    };
-    imports.wbg.__wbindgen_string_new = function(arg0, arg1) {
-        const ret = getStringFromWasm0(arg0, arg1);
-        return addHeapObject(ret);
     };
     imports.wbg.__wbindgen_number_new = function(arg0) {
         const ret = arg0;
@@ -347,6 +392,9 @@ function getImports() {
         const ret = getObject(arg0).body;
         return isLikeNone(ret) ? 0 : addHeapObject(ret);
     };
+    imports.wbg.__wbg_setonscroll_f18323ffd51183b3 = function(arg0, arg1) {
+        getObject(arg0).onscroll = getObject(arg1);
+    };
     imports.wbg.__wbg_createElement_28fc3740fb11defb = function() { return handleError(function (arg0, arg1, arg2) {
         const ret = getObject(arg0).createElement(getStringFromWasm0(arg1, arg2));
         return addHeapObject(ret);
@@ -359,6 +407,21 @@ function getImports() {
         const ret = getObject(arg0).createTextNode(getStringFromWasm0(arg1, arg2));
         return addHeapObject(ret);
     };
+    imports.wbg.__wbg_querySelector_73feab41810011dc = function() { return handleError(function (arg0, arg1, arg2) {
+        const ret = getObject(arg0).querySelector(getStringFromWasm0(arg1, arg2));
+        return isLikeNone(ret) ? 0 : addHeapObject(ret);
+    }, arguments) };
+    imports.wbg.__wbg_querySelectorAll_7a1acc554cc9fd65 = function() { return handleError(function (arg0, arg1, arg2) {
+        const ret = getObject(arg0).querySelectorAll(getStringFromWasm0(arg1, arg2));
+        return addHeapObject(ret);
+    }, arguments) };
+    imports.wbg.__wbg_addEventListener_ec92ea1297eefdfc = function() { return handleError(function (arg0, arg1, arg2, arg3, arg4) {
+        getObject(arg0).addEventListener(getStringFromWasm0(arg1, arg2), getObject(arg3), getObject(arg4));
+    }, arguments) };
+    imports.wbg.__wbg_top_fb523cecbe4ed028 = function(arg0) {
+        const ret = getObject(arg0).top;
+        return ret;
+    };
     imports.wbg.__wbg_value_eb32f706ae6bfab2 = function(arg0, arg1) {
         const ret = getObject(arg1).value;
         const ptr0 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
@@ -368,6 +431,13 @@ function getImports() {
     };
     imports.wbg.__wbg_setvalue_3dd349be116107ce = function(arg0, arg1, arg2) {
         getObject(arg0).value = getStringFromWasm0(arg1, arg2);
+    };
+    imports.wbg.__wbg_setProperty_e0774a610618c48e = function() { return handleError(function (arg0, arg1, arg2, arg3, arg4) {
+        getObject(arg0).setProperty(getStringFromWasm0(arg1, arg2), getStringFromWasm0(arg3, arg4));
+    }, arguments) };
+    imports.wbg.__wbg_item_11c7768b5d75acda = function(arg0, arg1) {
+        const ret = getObject(arg0).item(arg1 >>> 0);
+        return isLikeNone(ret) ? 0 : addHeapObject(ret);
     };
     imports.wbg.__wbg_instanceof_Element_1714e50f9bda1d15 = function(arg0) {
         const ret = getObject(arg0) instanceof Element;
@@ -380,12 +450,31 @@ function getImports() {
         getInt32Memory0()[arg0 / 4 + 1] = len0;
         getInt32Memory0()[arg0 / 4 + 0] = ptr0;
     };
+    imports.wbg.__wbg_setclassName_18f97d7a3caee0c3 = function(arg0, arg1, arg2) {
+        getObject(arg0).className = getStringFromWasm0(arg1, arg2);
+    };
+    imports.wbg.__wbg_getBoundingClientRect_a008242eae1b5be0 = function(arg0) {
+        const ret = getObject(arg0).getBoundingClientRect();
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_querySelector_b8ea7c45079af611 = function() { return handleError(function (arg0, arg1, arg2) {
+        const ret = getObject(arg0).querySelector(getStringFromWasm0(arg1, arg2));
+        return isLikeNone(ret) ? 0 : addHeapObject(ret);
+    }, arguments) };
     imports.wbg.__wbg_removeAttribute_2d6e56b2f03aa57e = function() { return handleError(function (arg0, arg1, arg2) {
         getObject(arg0).removeAttribute(getStringFromWasm0(arg1, arg2));
     }, arguments) };
     imports.wbg.__wbg_setAttribute_8cfc462c0dedd03b = function() { return handleError(function (arg0, arg1, arg2, arg3, arg4) {
         getObject(arg0).setAttribute(getStringFromWasm0(arg1, arg2), getStringFromWasm0(arg3, arg4));
     }, arguments) };
+    imports.wbg.__wbg_instanceof_HtmlElement_057bfd3477e9b9b6 = function(arg0) {
+        const ret = getObject(arg0) instanceof HTMLElement;
+        return ret;
+    };
+    imports.wbg.__wbg_style_365767989176e8d2 = function(arg0) {
+        const ret = getObject(arg0).style;
+        return addHeapObject(ret);
+    };
     imports.wbg.__wbg_setchecked_a450b330df6b3fa5 = function(arg0, arg1) {
         getObject(arg0).checked = arg1 !== 0;
     };
@@ -407,9 +496,6 @@ function getImports() {
         const ret = getObject(arg0).cancelBubble;
         return ret;
     };
-    imports.wbg.__wbg_addEventListener_ec92ea1297eefdfc = function() { return handleError(function (arg0, arg1, arg2, arg3, arg4) {
-        getObject(arg0).addEventListener(getStringFromWasm0(arg1, arg2), getObject(arg3), getObject(arg4));
-    }, arguments) };
     imports.wbg.__wbg_parentElement_14138ef2ff0b9c88 = function(arg0) {
         const ret = getObject(arg0).parentElement;
         return isLikeNone(ret) ? 0 : addHeapObject(ret);
@@ -469,6 +555,10 @@ function getImports() {
         const ret = getObject(arg0) === undefined;
         return ret;
     };
+    imports.wbg.__wbg_newwithargs_97d68be691eaac2d = function(arg0, arg1, arg2, arg3) {
+        const ret = new Function(getStringFromWasm0(arg0, arg1), getStringFromWasm0(arg2, arg3));
+        return addHeapObject(ret);
+    };
     imports.wbg.__wbg_valueOf_f83bee79f23e7b05 = function(arg0) {
         const ret = getObject(arg0).valueOf();
         return ret;
@@ -491,8 +581,11 @@ function getImports() {
     imports.wbg.__wbindgen_throw = function(arg0, arg1) {
         throw new Error(getStringFromWasm0(arg0, arg1));
     };
-    imports.wbg.__wbindgen_closure_wrapper229 = function(arg0, arg1, arg2) {
-        const ret = makeClosure(arg0, arg1, 68, __wbg_adapter_18);
+    imports.wbg.__wbindgen_rethrow = function(arg0) {
+        throw takeObject(arg0);
+    };
+    imports.wbg.__wbindgen_closure_wrapper274 = function(arg0, arg1, arg2) {
+        const ret = makeClosure(arg0, arg1, 93, __wbg_adapter_20);
         return addHeapObject(ret);
     };
 
@@ -538,6 +631,7 @@ async function init(input) {
 var exports = /*#__PURE__*/Object.freeze({
     __proto__: null,
     run_app: run_app,
+    ScrollState: ScrollState,
     initSync: initSync,
     'default': init
 });
@@ -545,7 +639,7 @@ var exports = /*#__PURE__*/Object.freeze({
 var app = async (opt = {}) => {
                         let {importHook, serverPath} = opt;
 
-                        let path = "js/assets/algorithmssite_page-068f2653.wasm";
+                        let path = "js/assets/algorithmssite_page-9a4edae3.wasm";
 
                         if (serverPath != null) {
                             path = serverPath + /[^\/\\]*$/.exec(path)[0];
@@ -559,7 +653,7 @@ var app = async (opt = {}) => {
                         return exports;
                     };
 
-var sass = ___$insertStyle("body {\n  padding: 0px;\n  margin: 0px;\n  text-align: center;\n  background-color: rgba(228, 228, 228, 0.5);\n}\n\nheader {\n  display: inline;\n  background-color: rgba(170, 198, 188, 0.7);\n}\nheader ul {\n  list-style: none;\n  padding-inline-start: 0px;\n  margin-inline-start: 0px;\n  display: inline-flex;\n  justify-content: space-around;\n  align-content: center;\n  flex-direction: row;\n  align-items: flex-end;\n  width: 100%;\n}\n\n.custom-button-flat {\n  font-family: \"Open Sans\", Helvetica, Arial, sans-serif;\n  text-align: center;\n  font-size: 12px;\n  line-height: 12px;\n  outline: none;\n  border-radius: 48px;\n  cursor: pointer;\n  box-shadow: rgb(150, 120, 120) 5px 5px 10px 5px;\n  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s;\n  text-decoration: none;\n  color: black;\n  border: none;\n  background-color: rgba(248, 248, 248, 0.5);\n  padding: 8px 14px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  align-content: center;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.custom-button-flat-select {\n  font-family: \"Open Sans\", Helvetica, Arial, sans-serif;\n  text-align: center;\n  font-size: 12px;\n  line-height: 12px;\n  outline: none;\n  border-radius: 48px;\n  cursor: pointer;\n  box-shadow: rgb(180, 140, 150) 5px 5px 10px 5px;\n  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s;\n  text-decoration: none;\n  color: black;\n  border: none;\n  background-color: rgba(248, 248, 248, 0.5);\n  padding: 8px 14px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  align-content: center;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.pulse-info:hover {\n  box-shadow: rgb(120, 119, 150) 5px 5px 10px 5px;\n}\n\nnav {\n  width: 100%;\n  padding-bottom: 80px;\n  background-image: url(images/logo.svg);\n  background-size: 550px 610px;\n  background-repeat: no-repeat;\n  background-position: center;\n  margin: 100px 0px 500px 0px;\n}\n\nfooter {\n  width: 100%;\n  text-align: center;\n  background-color: rgba(150, 168, 148, 0.5);\n  padding: 10px 0px;\n}");
+var sass = ___$insertStyle("body {\n  padding: 0px;\n  margin: 0px;\n  text-align: center;\n  background-color: rgba(228, 228, 228, 0.5);\n}\n\nheader {\n  top: 0;\n  display: flex;\n  position: fixed;\n  align-items: center;\n  align-content: center;\n  justify-content: space-between;\n  background-color: rgba(170, 198, 188, 0.7);\n  width: 100%;\n}\nheader img {\n  margin-left: 20px;\n}\nheader ul {\n  list-style: none;\n  padding-inline-start: 0px;\n  margin-inline-start: 0px;\n  display: inline-flex;\n  justify-content: space-between;\n  flex-direction: row;\n  margin-right: 20px;\n  width: 30%;\n}\n\n.custom-button-flat {\n  font-family: \"Open Sans\", Helvetica, Arial, sans-serif;\n  text-align: center;\n  font-size: 12px;\n  line-height: 12px;\n  outline: none;\n  border-radius: 48px;\n  cursor: pointer;\n  box-shadow: rgb(150, 120, 120) 5px 5px 10px 5px;\n  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s;\n  text-decoration: none;\n  color: black;\n  border: none;\n  background-color: rgba(248, 248, 248, 0.5);\n  padding: 8px 14px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  align-content: center;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.custom-button-flat-select {\n  font-family: \"Open Sans\", Helvetica, Arial, sans-serif;\n  text-align: center;\n  font-size: 12px;\n  line-height: 12px;\n  outline: none;\n  border-radius: 48px;\n  cursor: pointer;\n  box-shadow: rgb(120, 148, 138) 2px 2px 5px 2px;\n  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s;\n  text-decoration: none;\n  color: black;\n  border: none;\n  background-color: rgba(248, 248, 248, 0.5);\n  padding: 8px 14px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  align-content: center;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.pulse-info:hover {\n  box-shadow: rgb(150, 120, 120) 2px 2px 5px 2px;\n}\n\nnav {\n  width: 100%;\n  padding-bottom: 80px;\n  background-image: url(images/logo.svg);\n  background-size: 550px 610px;\n  background-repeat: no-repeat;\n  background-position: center;\n  margin: 100px 0px 500px 0px;\n}\n\nfooter {\n  width: 100%;\n  text-align: center;\n  background-color: rgba(150, 168, 148, 0.5);\n  padding: 10px 0px;\n}");
 
 var main = {
   app: await app(),
