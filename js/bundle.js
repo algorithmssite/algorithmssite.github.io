@@ -31,23 +31,6 @@ function takeObject(idx) {
     return ret;
 }
 
-const cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
-
-cachedTextDecoder.decode();
-
-let cachedUint8Memory0 = new Uint8Array();
-
-function getUint8Memory0() {
-    if (cachedUint8Memory0.byteLength === 0) {
-        cachedUint8Memory0 = new Uint8Array(wasm.memory.buffer);
-    }
-    return cachedUint8Memory0;
-}
-
-function getStringFromWasm0(ptr, len) {
-    return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
-}
-
 function addHeapObject(obj) {
     if (heap_next === heap.length) heap.push(heap.length + 1);
     const idx = heap_next;
@@ -77,6 +60,23 @@ function getInt32Memory0() {
         cachedInt32Memory0 = new Int32Array(wasm.memory.buffer);
     }
     return cachedInt32Memory0;
+}
+
+const cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
+
+cachedTextDecoder.decode();
+
+let cachedUint8Memory0 = new Uint8Array();
+
+function getUint8Memory0() {
+    if (cachedUint8Memory0.byteLength === 0) {
+        cachedUint8Memory0 = new Uint8Array(wasm.memory.buffer);
+    }
+    return cachedUint8Memory0;
+}
+
+function getStringFromWasm0(ptr, len) {
+    return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
 }
 
 function debugString(val) {
@@ -199,6 +199,34 @@ function passStringToWasm0(arg, malloc, realloc) {
     return ptr;
 }
 
+function makeMutClosure(arg0, arg1, dtor, f) {
+    const state = { a: arg0, b: arg1, cnt: 1, dtor };
+    const real = (...args) => {
+        // First up with a closure we increment the internal reference
+        // count. This ensures that the Rust closure environment won't
+        // be deallocated while we're invoking it.
+        state.cnt++;
+        const a = state.a;
+        state.a = 0;
+        try {
+            return f(a, state.b, ...args);
+        } finally {
+            if (--state.cnt === 0) {
+                wasm.__wbindgen_export_2.get(state.dtor)(a, state.b);
+
+            } else {
+                state.a = a;
+            }
+        }
+    };
+    real.original = state;
+
+    return real;
+}
+function __wbg_adapter_18(arg0, arg1) {
+    wasm._dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h36f5198bbf5f6748(arg0, arg1);
+}
+
 function makeClosure(arg0, arg1, dtor, f) {
     const state = { a: arg0, b: arg1, cnt: 1, dtor };
     const real = (...args) => {
@@ -220,14 +248,14 @@ function makeClosure(arg0, arg1, dtor, f) {
 
     return real;
 }
-function __wbg_adapter_20(arg0, arg1, arg2) {
-    wasm._dyn_core__ops__function__Fn__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__hacddaf00cbcb61e7(arg0, arg1, addHeapObject(arg2));
+function __wbg_adapter_21(arg0, arg1, arg2) {
+    wasm._dyn_core__ops__function__Fn__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h0fe710c26e6fc0f3(arg0, arg1, addHeapObject(arg2));
 }
 
 /**
 */
-function run_app() {
-    wasm.run_app();
+function run() {
+    wasm.run();
 }
 
 let cachedUint32Memory0 = new Uint32Array();
@@ -259,13 +287,6 @@ function handleError(f, args) {
 /**
 */
 class ScrollState {
-
-    static __wrap(ptr) {
-        const obj = Object.create(ScrollState.prototype);
-        obj.ptr = ptr;
-
-        return obj;
-    }
 
     __destroy_into_raw() {
         const ptr = this.ptr;
@@ -332,26 +353,22 @@ function getImports() {
     imports.wbg.__wbindgen_object_drop_ref = function(arg0) {
         takeObject(arg0);
     };
-    imports.wbg.__wbg_log_dccaa2bc9993fe59 = function(arg0, arg1) {
-        console.log(getStringFromWasm0(arg0, arg1));
-    };
-    imports.wbg.__wbindgen_string_new = function(arg0, arg1) {
-        const ret = getStringFromWasm0(arg0, arg1);
-        return addHeapObject(ret);
-    };
-    imports.wbg.__wbg_scrollstate_new = function(arg0) {
-        const ret = ScrollState.__wrap(arg0);
-        return addHeapObject(ret);
-    };
     imports.wbg.__wbindgen_object_clone_ref = function(arg0) {
         const ret = getObject(arg0);
         return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_log_dccaa2bc9993fe59 = function(arg0, arg1) {
+        console.log(getStringFromWasm0(arg0, arg1));
     };
     imports.wbg.__wbindgen_number_get = function(arg0, arg1) {
         const obj = getObject(arg1);
         const ret = typeof(obj) === 'number' ? obj : undefined;
         getFloat64Memory0()[arg0 / 8 + 1] = isLikeNone(ret) ? 0 : ret;
         getInt32Memory0()[arg0 / 4 + 0] = !isLikeNone(ret);
+    };
+    imports.wbg.__wbindgen_string_new = function(arg0, arg1) {
+        const ret = getStringFromWasm0(arg0, arg1);
+        return addHeapObject(ret);
     };
     imports.wbg.__wbindgen_number_new = function(arg0) {
         const ret = arg0;
@@ -375,7 +392,7 @@ function getImports() {
             wasm.__wbindgen_free(arg0, arg1);
         }
     };
-    imports.wbg.__wbg_warn_2aa0e7178e1d35f6 = function(arg0, arg1) {
+    imports.wbg.__wbg_warn_921059440157e870 = function(arg0, arg1) {
         var v0 = getArrayJsValueFromWasm0(arg0, arg1).slice();
         wasm.__wbindgen_free(arg0, arg1 * 4);
         console.warn(...v0);
@@ -555,10 +572,6 @@ function getImports() {
         const ret = getObject(arg0) === undefined;
         return ret;
     };
-    imports.wbg.__wbg_newwithargs_97d68be691eaac2d = function(arg0, arg1, arg2, arg3) {
-        const ret = new Function(getStringFromWasm0(arg0, arg1), getStringFromWasm0(arg2, arg3));
-        return addHeapObject(ret);
-    };
     imports.wbg.__wbg_valueOf_f83bee79f23e7b05 = function(arg0) {
         const ret = getObject(arg0).valueOf();
         return ret;
@@ -581,11 +594,12 @@ function getImports() {
     imports.wbg.__wbindgen_throw = function(arg0, arg1) {
         throw new Error(getStringFromWasm0(arg0, arg1));
     };
-    imports.wbg.__wbindgen_rethrow = function(arg0) {
-        throw takeObject(arg0);
+    imports.wbg.__wbindgen_closure_wrapper159 = function(arg0, arg1, arg2) {
+        const ret = makeMutClosure(arg0, arg1, 57, __wbg_adapter_18);
+        return addHeapObject(ret);
     };
-    imports.wbg.__wbindgen_closure_wrapper274 = function(arg0, arg1, arg2) {
-        const ret = makeClosure(arg0, arg1, 93, __wbg_adapter_20);
+    imports.wbg.__wbindgen_closure_wrapper350 = function(arg0, arg1, arg2) {
+        const ret = makeClosure(arg0, arg1, 144, __wbg_adapter_21);
         return addHeapObject(ret);
     };
 
@@ -630,7 +644,7 @@ async function init(input) {
 
 var exports = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    run_app: run_app,
+    run: run,
     ScrollState: ScrollState,
     initSync: initSync,
     'default': init
@@ -639,7 +653,7 @@ var exports = /*#__PURE__*/Object.freeze({
 var app = async (opt = {}) => {
                         let {importHook, serverPath} = opt;
 
-                        let path = "js/assets/algorithmssite_page-9a4edae3.wasm";
+                        let path = "js/assets/algorithmssite_page-a918d807.wasm";
 
                         if (serverPath != null) {
                             path = serverPath + /[^\/\\]*$/.exec(path)[0];
@@ -653,11 +667,19 @@ var app = async (opt = {}) => {
                         return exports;
                     };
 
-var sass = ___$insertStyle("body {\n  padding: 0px;\n  margin: 0px;\n  text-align: center;\n  background-color: rgba(228, 228, 228, 0.5);\n}\n\nheader {\n  top: 0;\n  display: flex;\n  position: fixed;\n  align-items: center;\n  align-content: center;\n  justify-content: space-between;\n  background-color: rgba(170, 198, 188, 0.7);\n  width: 100%;\n}\nheader img {\n  margin-left: 20px;\n}\nheader ul {\n  list-style: none;\n  padding-inline-start: 0px;\n  margin-inline-start: 0px;\n  display: inline-flex;\n  justify-content: space-between;\n  flex-direction: row;\n  margin-right: 20px;\n  width: 30%;\n}\n\n.custom-button-flat {\n  font-family: \"Open Sans\", Helvetica, Arial, sans-serif;\n  text-align: center;\n  font-size: 12px;\n  line-height: 12px;\n  outline: none;\n  border-radius: 48px;\n  cursor: pointer;\n  box-shadow: rgb(150, 120, 120) 5px 5px 10px 5px;\n  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s;\n  text-decoration: none;\n  color: black;\n  border: none;\n  background-color: rgba(248, 248, 248, 0.5);\n  padding: 8px 14px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  align-content: center;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.custom-button-flat-select {\n  font-family: \"Open Sans\", Helvetica, Arial, sans-serif;\n  text-align: center;\n  font-size: 12px;\n  line-height: 12px;\n  outline: none;\n  border-radius: 48px;\n  cursor: pointer;\n  box-shadow: rgb(120, 148, 138) 2px 2px 5px 2px;\n  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s;\n  text-decoration: none;\n  color: black;\n  border: none;\n  background-color: rgba(248, 248, 248, 0.5);\n  padding: 8px 14px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  align-content: center;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.pulse-info:hover {\n  box-shadow: rgb(150, 120, 120) 2px 2px 5px 2px;\n}\n\nnav {\n  width: 100%;\n  padding-bottom: 80px;\n  background-image: url(images/logo.svg);\n  background-size: 550px 610px;\n  background-repeat: no-repeat;\n  background-position: center;\n  margin: 100px 0px 500px 0px;\n}\n\nfooter {\n  width: 100%;\n  text-align: center;\n  background-color: rgba(150, 168, 148, 0.5);\n  padding: 10px 0px;\n}");
+var article = ___$insertStyle("body {\n  padding: 0px;\n  margin: 0px;\n  text-align: center;\n  background-color: rgba(228, 228, 228, 0.5);\n}\n\n.hidden-flow {\n  overflow: hidden;\n}\n\nheader {\n  top: 0;\n  display: flex;\n  position: fixed;\n  align-items: center;\n  align-content: center;\n  justify-content: space-between;\n  background-color: rgba(170, 198, 188, 0.95);\n  width: 100%;\n}\nheader img {\n  margin-left: 5px;\n  width: 100px;\n  height: 50px;\n}\nheader ul {\n  list-style: none;\n  padding-inline-start: 0px;\n  margin-inline-start: 0px;\n  display: inline-flex;\n  justify-content: space-between;\n  flex-direction: row;\n  margin-right: 20px;\n  width: 30%;\n}\n\n.centered {\n  margin-right: auto;\n  margin-left: auto;\n  display: block;\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  color: #505050;\n  font-size: 24px;\n  font-family: Ubuntu-Light, Helvetica, sans-serif;\n  text-align: center;\n}\n\n/* ---------------------------------------------- */\n/* Loading animation from https://loading.io/css/ */\n.lds-dual-ring {\n  display: inline-block;\n  width: 24px;\n  height: 24px;\n}\n\n.lds-dual-ring:after {\n  content: \" \";\n  display: block;\n  width: 24px;\n  height: 24px;\n  margin: 0px;\n  border-radius: 50%;\n  border: 3px solid #333;\n  border-color: #333 transparent #333 transparent;\n  animation: lds-dual-ring 1.2s linear infinite;\n}\n\n@keyframes lds-dual-ring {\n  0% {\n    transform: rotate(0deg);\n  }\n  100% {\n    transform: rotate(360deg);\n  }\n}\n.custom-button-flat {\n  font-family: \"Open Sans\", Helvetica, Arial, sans-serif;\n  text-align: center;\n  font-size: 12px;\n  line-height: 12px;\n  outline: none;\n  border-radius: 48px;\n  cursor: pointer;\n  box-shadow: none;\n  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s;\n  text-decoration: none;\n  color: black;\n  border: none;\n  background-color: rgba(248, 248, 248, 0.5);\n  padding: 8px 14px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  align-content: center;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.custom-button-flat-select {\n  font-family: \"Open Sans\", Helvetica, Arial, sans-serif;\n  text-align: center;\n  font-size: 12px;\n  line-height: 12px;\n  outline: none;\n  border-radius: 48px;\n  cursor: pointer;\n  box-shadow: rgb(120, 148, 138) 2px 2px 5px 2px;\n  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s;\n  text-decoration: none;\n  color: black;\n  border: none;\n  background-color: rgba(248, 248, 248, 0.5);\n  padding: 8px 14px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  align-content: center;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.pulse-info:hover {\n  box-shadow: rgb(150, 168, 148) 2px 2px 5px 2px;\n}\n\nfooter {\n  width: 100%;\n  text-align: center;\n  background-color: rgba(150, 168, 148, 0.5);\n  padding: 10px 0px;\n}\n\n.not-found {\n  margin: 250px 0px 10px 0px;\n  display: flex;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  align-content: flex-start;\n  justify-content: space-around;\n  align-items: flex-start;\n}\n.not-found div {\n  width: 50%;\n}\n.not-found div h1 {\n  border-bottom: solid;\n}\n.not-found div p {\n  margin: 0px 0px 250px 0px;\n}\n\nmain {\n  margin-top: 100px;\n}\n\n.empty {\n  margin: 150px 0px 250px 0px;\n}\n\n.article-title {\n  margin-bottom: 50px;\n}\n\n.article-widget {\n  width: 290px;\n  margin: 10px;\n  padding: 10px;\n}\n.article-widget:hover {\n  background-color: rgba(255, 255, 255, 0.2);\n}\n.article-widget .article-widget-short {\n  margin: 5px 0px;\n}\n.article-widget .article-widget-author {\n  text-align: right;\n}");
+
+var donate = ___$insertStyle("body {\n  padding: 0px;\n  margin: 0px;\n  text-align: center;\n  background-color: rgba(228, 228, 228, 0.5);\n}\n\n.hidden-flow {\n  overflow: hidden;\n}\n\nheader {\n  top: 0;\n  display: flex;\n  position: fixed;\n  align-items: center;\n  align-content: center;\n  justify-content: space-between;\n  background-color: rgba(170, 198, 188, 0.95);\n  width: 100%;\n}\nheader img {\n  margin-left: 5px;\n  width: 100px;\n  height: 50px;\n}\nheader ul {\n  list-style: none;\n  padding-inline-start: 0px;\n  margin-inline-start: 0px;\n  display: inline-flex;\n  justify-content: space-between;\n  flex-direction: row;\n  margin-right: 20px;\n  width: 30%;\n}\n\n.centered {\n  margin-right: auto;\n  margin-left: auto;\n  display: block;\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  color: #505050;\n  font-size: 24px;\n  font-family: Ubuntu-Light, Helvetica, sans-serif;\n  text-align: center;\n}\n\n/* ---------------------------------------------- */\n/* Loading animation from https://loading.io/css/ */\n.lds-dual-ring {\n  display: inline-block;\n  width: 24px;\n  height: 24px;\n}\n\n.lds-dual-ring:after {\n  content: \" \";\n  display: block;\n  width: 24px;\n  height: 24px;\n  margin: 0px;\n  border-radius: 50%;\n  border: 3px solid #333;\n  border-color: #333 transparent #333 transparent;\n  animation: lds-dual-ring 1.2s linear infinite;\n}\n\n@keyframes lds-dual-ring {\n  0% {\n    transform: rotate(0deg);\n  }\n  100% {\n    transform: rotate(360deg);\n  }\n}\n.custom-button-flat {\n  font-family: \"Open Sans\", Helvetica, Arial, sans-serif;\n  text-align: center;\n  font-size: 12px;\n  line-height: 12px;\n  outline: none;\n  border-radius: 48px;\n  cursor: pointer;\n  box-shadow: none;\n  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s;\n  text-decoration: none;\n  color: black;\n  border: none;\n  background-color: rgba(248, 248, 248, 0.5);\n  padding: 8px 14px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  align-content: center;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.custom-button-flat-select {\n  font-family: \"Open Sans\", Helvetica, Arial, sans-serif;\n  text-align: center;\n  font-size: 12px;\n  line-height: 12px;\n  outline: none;\n  border-radius: 48px;\n  cursor: pointer;\n  box-shadow: rgb(120, 148, 138) 2px 2px 5px 2px;\n  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s;\n  text-decoration: none;\n  color: black;\n  border: none;\n  background-color: rgba(248, 248, 248, 0.5);\n  padding: 8px 14px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  align-content: center;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.pulse-info:hover {\n  box-shadow: rgb(150, 168, 148) 2px 2px 5px 2px;\n}\n\nfooter {\n  width: 100%;\n  text-align: center;\n  background-color: rgba(150, 168, 148, 0.5);\n  padding: 10px 0px;\n}\n\n.not-found {\n  margin: 250px 0px 10px 0px;\n  display: flex;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  align-content: flex-start;\n  justify-content: space-around;\n  align-items: flex-start;\n}\n.not-found div {\n  width: 50%;\n}\n.not-found div h1 {\n  border-bottom: solid;\n}\n.not-found div p {\n  margin: 0px 0px 250px 0px;\n}\n\n.splain {\n  margin: 100px 80px 50px 80px;\n  text-align: left;\n}\n\nsection {\n  margin: 40px 20px;\n}\n\n.wallet-widget {\n  background-color: rgba(120, 150, 120, 0.09);\n  width: 290px;\n  border-radius: 10px;\n  margin: 10px;\n  padding: 10px;\n}\n.wallet-widget .wallet-widget-top {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n}\n.wallet-widget img {\n  margin: 5px 0px;\n  width: 100px;\n  height: 100px;\n}\n.wallet-widget input {\n  text-align: center;\n  width: 250px;\n  height: 25px;\n  font-size: 12px;\n  border-radius: 15px 0px;\n}");
+
+var home = ___$insertStyle("body {\n  padding: 0px;\n  margin: 0px;\n  text-align: center;\n  background-color: rgba(228, 228, 228, 0.5);\n}\n\n.hidden-flow {\n  overflow: hidden;\n}\n\nheader {\n  top: 0;\n  display: flex;\n  position: fixed;\n  align-items: center;\n  align-content: center;\n  justify-content: space-between;\n  background-color: rgba(170, 198, 188, 0.95);\n  width: 100%;\n}\nheader img {\n  margin-left: 5px;\n  width: 100px;\n  height: 50px;\n}\nheader ul {\n  list-style: none;\n  padding-inline-start: 0px;\n  margin-inline-start: 0px;\n  display: inline-flex;\n  justify-content: space-between;\n  flex-direction: row;\n  margin-right: 20px;\n  width: 30%;\n}\n\n.centered {\n  margin-right: auto;\n  margin-left: auto;\n  display: block;\n  position: fixed;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  color: #505050;\n  font-size: 24px;\n  font-family: Ubuntu-Light, Helvetica, sans-serif;\n  text-align: center;\n}\n\n/* ---------------------------------------------- */\n/* Loading animation from https://loading.io/css/ */\n.lds-dual-ring {\n  display: inline-block;\n  width: 24px;\n  height: 24px;\n}\n\n.lds-dual-ring:after {\n  content: \" \";\n  display: block;\n  width: 24px;\n  height: 24px;\n  margin: 0px;\n  border-radius: 50%;\n  border: 3px solid #333;\n  border-color: #333 transparent #333 transparent;\n  animation: lds-dual-ring 1.2s linear infinite;\n}\n\n@keyframes lds-dual-ring {\n  0% {\n    transform: rotate(0deg);\n  }\n  100% {\n    transform: rotate(360deg);\n  }\n}\n.custom-button-flat {\n  font-family: \"Open Sans\", Helvetica, Arial, sans-serif;\n  text-align: center;\n  font-size: 12px;\n  line-height: 12px;\n  outline: none;\n  border-radius: 48px;\n  cursor: pointer;\n  box-shadow: none;\n  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s;\n  text-decoration: none;\n  color: black;\n  border: none;\n  background-color: rgba(248, 248, 248, 0.5);\n  padding: 8px 14px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  align-content: center;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.custom-button-flat-select {\n  font-family: \"Open Sans\", Helvetica, Arial, sans-serif;\n  text-align: center;\n  font-size: 12px;\n  line-height: 12px;\n  outline: none;\n  border-radius: 48px;\n  cursor: pointer;\n  box-shadow: rgb(120, 148, 138) 2px 2px 5px 2px;\n  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s;\n  text-decoration: none;\n  color: black;\n  border: none;\n  background-color: rgba(248, 248, 248, 0.5);\n  padding: 8px 14px;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: wrap;\n  justify-content: center;\n  align-items: center;\n  align-content: center;\n  box-sizing: border-box;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.pulse-info:hover {\n  box-shadow: rgb(150, 168, 148) 2px 2px 5px 2px;\n}\n\nfooter {\n  width: 100%;\n  text-align: center;\n  background-color: rgba(150, 168, 148, 0.5);\n  padding: 10px 0px;\n}\n\n.not-found {\n  margin: 250px 0px 10px 0px;\n  display: flex;\n  display: flex;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  align-content: flex-start;\n  justify-content: space-around;\n  align-items: flex-start;\n}\n.not-found div {\n  width: 50%;\n}\n.not-found div h1 {\n  border-bottom: solid;\n}\n.not-found div p {\n  margin: 0px 0px 250px 0px;\n}\n\n.welcome {\n  width: 100%;\n  padding: 200px 0px 240px 0px;\n  background-image: url(../images/logo.svg);\n  background-size: 500px 250px;\n  background-repeat: no-repeat;\n  background-position: center;\n  background-color: rgba(218, 218, 228, 0.3);\n  box-shadow: rgb(120, 148, 138) 2px 2px 5px 2px;\n}\n\n.info {\n  margin: 40px 0px;\n  display: flex;\n  text-align: center;\n  flex-direction: column;\n  align-content: center;\n  justify-content: space-between;\n  align-items: center;\n}\n.info div {\n  text-align: left;\n  width: 60%;\n}\n\naside {\n  text-align: left;\n  box-shadow: rgb(120, 148, 138) 2px 2px 5px 2px;\n  margin: 10px 20px;\n  background-color: rgba(150, 168, 148, 0.5);\n  border-radius: 0px 0px 10px 10px;\n}\naside div {\n  background-color: rgba(228, 228, 228, 0.5);\n}\naside .title {\n  background-color: transparent;\n  text-align: center;\n}\naside a {\n  text-decoration: none;\n  color: black;\n}\naside a:hover {\n  text-decoration: underline;\n  color: #575757;\n}\n\naside img {\n  width: 50px;\n  hight: 50px;\n  margin-left: 10px;\n}");
 
 var main = {
   app: await app(),
-  sass: sass,
+  style: {
+    "article": article,
+    "donate": donate,
+    "home": home,
+  },
 };
 
 export { main as default };
