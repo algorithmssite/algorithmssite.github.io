@@ -1,6 +1,10 @@
+mod components;
+
+use components::*;
 use wasm_bindgen::{prelude::*, JsCast};
 use web_sys::Element;
 use yew::prelude::*;
+
 #[macro_export]
 macro_rules! console_log {
     ($($t:tt)*) => (
@@ -14,88 +18,89 @@ extern "C" {
     fn log(s: &str);
 }
 
-struct Home;
+pub type Links = Vec<(String, String)>;
 
-impl Component for Home {
+#[inline(always)]
+fn links(raw: &[(&str, &str)]) -> Links {
+    raw.iter()
+        .map(|(label, url)| (label.to_string(), url.to_string()))
+        .collect()
+}
+
+#[derive(Clone, Eq, PartialEq, Properties, Debug)]
+pub struct AccountProps {
+    pub icon: String,
+    pub links: Vec<(String, String)>,
+}
+
+#[derive(Clone, Eq, PartialEq, Debug)]
+struct Account {
+    icon: String,
+    links: Links,
+}
+
+impl Component for Account {
     type Message = ();
-    type Properties = ();
+    type Properties = AccountProps;
 
-    fn create(_ctx: &Context<Self>) -> Self {
-        Self
+    fn create(ctx: &Context<Self>) -> Self {
+        Self {
+            icon: ctx.props().icon.clone(),
+            links: ctx.props().links.clone(),
+        }
     }
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
-        Html::default()
+        let last = self.links.last().map(|item| item.1.clone()).unwrap();
+        html! {
+            <div>
+                <img src={format!("/images/{}", &self.icon)} alt="Img" />
+                <span>
+                    {
+                      for self.links.iter().map(|(label, link)| {
+                        html! {
+                            <>
+                            <a href={link.clone()} target="_blank" rel="noopener noreferrer">
+                                {label.clone()}
+                            </a>
+                            { if link != &last {", "} else {""} }
+                            </>
+                        }
+                      })
+                    }
+                </span>
+            </div>
+        }
     }
 }
 
-struct Articles;
-
-impl Component for Articles {
-    type Message = ();
-    type Properties = ();
-
-    fn create(_ctx: &Context<Self>) -> Self {
-        Self
-    }
-
-    fn view(&self, _ctx: &Context<Self>) -> Html {
-        Html::default()
-    }
-}
-
-struct Donate;
-
-impl Component for Donate {
-    type Message = ();
-    type Properties = ();
-
-    fn create(_ctx: &Context<Self>) -> Self {
-        Self
-    }
-
-    fn view(&self, _ctx: &Context<Self>) -> Html {
-        Html::default()
-    }
-}
-
+#[derive(Eq, PartialEq, Copy, Clone, Debug, Default)]
 enum Section {
+    #[default]
     Home,
     Articles,
     Donate,
 }
 
-/*
-impl Component for Section {
-    type Message = ();
-    type Properties = ();
-
-    fn create(_ctx: &Context<Self>) -> Self {
-        Self::Home
-    }
-
-    fn view(&self, ctx: &Context<Self>) -> Html {
-        match self {
-            Self::Home => html! { <Home /> },
-            Self::Articles => html! { <Articles /> },
-            Self::Donate => html! { <Donate /> },
-        }
-    }
+#[derive(Default)]
+struct App {
+    section: Section,
 }
-*/
-struct Header;
 
-impl Component for Header {
+impl Component for App {
     type Message = Section;
     type Properties = ();
 
     fn create(_ctx: &Context<Self>) -> Self {
-        Self
+        Self::default()
     }
 
     fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
-        console_log!("Update it {}", msg as usize);
-        // let select = match msg {Home => 0, Articles => 1, Donate => 2 };
+        if self.section == msg {
+            return false;
+        }
+
+        self.section = msg;
 
         let document = web_sys::window().unwrap().document().unwrap();
         let old_select: Element = document
@@ -111,57 +116,6 @@ impl Component for Header {
             .dyn_into::<Element>()
             .unwrap();
         new_select.set_class_name("custom-button-flat-select pulse-info");
-        false
-    }
-
-    fn changed(&mut self, _ctx: &Context<Self>) -> bool {
-        // Should only return "true" if new properties are different to
-        // previously received properties.
-        // This component has no properties so we will always return "false".
-        console_log!("changed it");
-
-        false
-    }
-
-    fn view(&self, ctx: &Context<Self>) -> Html {
-        html! {
-          <header>
-            <img alt="page logo" src="images/logo.svg" />
-            <ul>
-              <li> <button class="custom-button-flat-select pulse-info"
-              onclick={ctx.link().callback(|_| Section::Home)}
-              >
-                <span> {"Home"} </span>
-              </button> </li>
-
-               <li> <button class="custom-button-flat pulse-info"
-               onclick={ctx.link().callback(|_| Section::Articles)}
-               >
-                <span> {"Articles"} </span>
-              </button> </li>
-
-               <li> <button class="custom-button-flat pulse-info"
-               onclick={ctx.link().callback(|_| Section::Donate)}
-               >
-                <span> {"Donate"} </span>
-              </button> </li>
-            </ul>
-          </header>
-        }
-    }
-}
-
-struct App;
-
-impl Component for App {
-    type Message = ();
-    type Properties = ();
-
-    fn create(_ctx: &Context<Self>) -> Self {
-        Self
-    }
-
-    fn update(&mut self, _ctx: &Context<Self>, _msg: Self::Message) -> bool {
         true
     }
 
@@ -169,26 +123,69 @@ impl Component for App {
         // Should only return "true" if new properties are different to
         // previously received properties.
         // This component has no properties so we will always return "false".
-        false
+
+        true
     }
 
-    fn view(&self, _ctx: &Context<Self>) -> Html {
+    fn view(&self, ctx: &Context<Self>) -> Html {
+        let telegram = links(&[
+            // ("Community", "https://telegram.com"),
+            ("Spanish Community", "https://t.me/algorithms_site_es"),
+        ]);
+
+        let discord = links(&[("Spanish Community", "https://discord.gg/y3FbsVswQP")]);
+        let github = links(&[("Repository", "https://github.com/algorithmssite")]);
+
         html! {
           <>
-            <Header />
-            <nav>
-                <h1> {"Welcome"} </h1>
-            </nav>
-            <main></main>
+            <header>
+            <img alt="page logo" src="images/logo2.svg" />
 
+            <div class="menu-container">
+                <button class="custom-button-flat-select pulse-info"
+                    onclick={ctx.link().callback(|_| Section::Home)}
+                >
+                    <span> {"Home"} </span>
+                </button>
+
+                <button class="custom-button-flat pulse-info"
+                    onclick={ctx.link().callback(|_| Section::Articles)}
+                >
+                <span> {"Articles"} </span>
+                </button>
+                
+                <button class="custom-button-flat pulse-info"
+                    onclick={ctx.link().callback(|_| Section::Donate)}
+                >
+                    <span> {"Donate"} </span>
+                </button>
+
+            </div>
+
+            </header>
+            {
+                match self.section {
+                    Section::Home => html! { <Home /> },
+                    Section::Articles => html! { <Articles /> },
+                    Section::Donate => html! { <Donate /> }
+                }
+            }
+
+            <aside class="contact-us">
+                <div class="title"><h1>{"Contact us"} </h1></div>
+                <div class="social">
+                    <Account icon="telegram.svg" links={telegram}/>
+                    <Account icon="discord.svg" links={discord}/>
+                    <Account icon="github.svg" links={github}/>
+                </div>
+            </aside>
             <footer>
-                <p>{"Copyright © 2022 Algorithms Site, All Rights Reserved."}</p>
+                <p>{"Copyright © 2022-present Algorithms Site, All Rights Reserved."}</p>
             </footer>
           </>
         }
     }
 }
-
 
 #[wasm_bindgen]
 pub struct ScrollState {
@@ -208,9 +205,7 @@ impl ScrollState {
 
         let header: web_sys::HtmlElement =
             body.query_selector("header")?.unwrap().dyn_into().unwrap();
-        // CssStyleDeclaration
         let style = header.style();
-
         let top = body.get_bounding_client_rect().top();
 
         if top > self.position {
@@ -226,25 +221,16 @@ impl ScrollState {
 }
 
 #[wasm_bindgen(start)]
-pub fn run_app() -> Result<(), JsValue> {
-    // add_event_listener_with_callback
+pub fn run() -> Result<(), JsValue> {
     let document = web_sys::window().unwrap().document().unwrap();
+    let mut scroll_state = ScrollState { position: 0.0 };
 
-    let global_object = js_sys::global();
+    let closure =
+        Closure::wrap(Box::new(move || scroll_state.update().unwrap()) as Box<dyn FnMut()>);
+    document.set_onscroll(Some(closure.as_ref().unchecked_ref()));
 
-    js_sys::Reflect::set(
-        &global_object,
-        &JsValue::from("scroll_state"),
-        &JsValue::from(ScrollState { position: 0.0 }),
-    )?;
-
-    document.set_onscroll(Some(&js_sys::Function::new_with_args(
-        "event",
-        "scroll_state.update()",
-    )));
-
+    closure.forget(); // Important!!!
     yew::start_app::<App>();
 
     Ok(())
 }
-/**/

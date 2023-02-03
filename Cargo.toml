@@ -15,5 +15,7 @@ js-sys = "*"
 version = "*"
 features = [
     "Document", "Window", "HtmlElement", "DomRect", "Element", "Node", "NodeList",
-    "CssStyleDeclaration"
+    "CssStyleDeclaration", "Response", "XmlHttpRequest", "HtmlLinkElement",
+    "HtmlDocument", "HtmlInputElement", "Location", "FormData", "HtmlFormElement",
+    "RequestInit", "Request", "Response", "HtmlScriptElement"
 ]

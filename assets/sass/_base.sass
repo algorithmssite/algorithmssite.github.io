@@ -1,0 +1,180 @@
+$normal-color: rgba(170, 198, 188, 0.7)
+$contra-color: rgba(178, 206, 196, 0.7)
+
+body
+  padding: 0px
+  margin: 0px
+  // Temporal
+  text-align: center
+  background-color: rgba(228, 228, 228, 0.5)
+
+p
+  font-size: 14px
+
+.hidden-flow
+  overflow: hidden
+
+header
+  top: 0
+  display: flex
+  position: fixed
+  align-items: center
+  
+  align-content: center
+  justify-content: space-between
+  background-color: rgba(170, 198, 188, 0.95)
+  width: 100%
+
+  img
+    margin-left: 5px
+    width: 100px
+    height: 50px
+    // box-shadow: rgb(150, 120, 120) 5px 5px 10px 5px
+
+  menu-container
+    list-style: none
+    padding-inline-start: 0px
+    margin-inline-start: 0px
+    display: inline-flex
+    justify-content: space-between
+    flex-direction: row
+    //padding: 0px 50px 0px 50px
+    margin-right: 20px
+    width: 30%
+
+
+.centered
+  margin-right: auto
+  margin-left: auto
+  display: block
+  position: fixed
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  color: #505050
+  font-size: 24px
+  font-family: Ubuntu-Light, Helvetica, sans-serif
+  text-align: center
+
+/* ---------------------------------------------- */
+/* Loading animation from https://loading.io/css/ */
+.lds-dual-ring
+  display: inline-block
+  width: 24px
+  height: 24px
+
+.lds-dual-ring:after
+  content: " "
+  display: block
+  width: 24px
+  height: 24px
+  margin: 0px
+  border-radius: 50%
+  border: 3px solid #333
+  border-color: #333 transparent #333 transparent
+  animation: lds-dual-ring 1.2s linear infinite
+
+@keyframes lds-dual-ring
+  0%
+    transform: rotate(0deg)
+
+
+  100%
+    transform: rotate(360deg)
+  
+
+@mixin button-mixin($box: none)
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif
+  text-align: center
+  font-size: 12px
+  line-height: 12px
+  outline: none
+  border-radius: 48px
+  cursor: pointer
+  // box-shadow: none
+  box-shadow: $box // rgb(150, 120, 120) 5px 5px 10px 5px
+  transition: background-color 0.1s, box-shadow 0.1s, border 0.1s
+  text-decoration: none
+  color: black
+  // border: 1px solid #777777
+  border: none
+  background-color: rgba(248, 248, 248, 0.5)
+  padding: 8px 14px
+  display: inline-block
+  margin-right: 20px
+  
+
+.custom-button-flat
+  @include button-mixin($box: none)
+
+.custom-button-flat-select
+  @include button-mixin($box: rgb(120, 148, 138) 2px 2px 5px 2px)
+
+.pulse-info:hover
+  box-shadow: rgb(150, 168, 148) 2px 2px 5px 2px
+
+.social
+  display: flex
+  flex-direction: row
+  justify-content: space-around
+  background-color: transparent
+
+
+
+aside.contact-us
+  font-size: 14px
+  padding-bottom: 10px
+  text-align: left
+  box-shadow: rgb(120 148 138) 2px 2px 5px 2px
+  margin: 10px 20px
+  background-color: rgba(150, 168, 148, 0.5)
+  border-radius: 0px 0px 10px 10px
+
+  div
+    background-color: transparent // rgba(228, 228, 228, 0.5)
+  
+  .title
+    margin-bottom: 30px
+    background-color: transparent
+    text-align: center
+
+  a
+    text-decoration: none
+    color: black
+  
+  a:hover
+    text-decoration: underline
+    color: #575757
+
+aside.contact-us img
+  width: 50px
+  hight: 50px
+  margin-left: 10px
+  // background-color: rgba(228, 228, 228, 0.5)
+  
+  
+footer
+  width: 100%
+  text-align: center
+  background-color: rgba(150, 168, 148, 0.5)
+  padding: 10px 0px
+
+
+.not-found
+  margin: 250px 0px 10px 0px
+  display: flex
+  display: flex
+  flex-direction: row
+  flex-wrap: nowrap
+  align-content: flex-start
+  justify-content: space-around
+  align-items: flex-start
+
+  div
+    width: 50%
+
+    h1
+      border-bottom: solid
+    
+    p    
+      margin: 0px 0px 250px 0px
