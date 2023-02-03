@@ -53,7 +53,7 @@ impl Component for Wallet {
     fn create(ctx: &Context<Self>) -> Self {
         ctx.props().clone()
     }
-    // onclick="copyAddr(event)"
+    
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <article class="wallet-widget">
@@ -78,22 +78,9 @@ impl Component for Wallet {
         }
     }
 }
+
 pub struct Donate;
 
-/*
-{% for wallet in wallets %}
-    <article class="wallet-widget">
-        <div class="wallet-widget-top">
-            <span> {{ wallet.coin }} </span> <span> {{ wallet.coin_alias }} </span>
-        </div>
-
-        <img src="/images/donate/{{ wallet.icon }}">
-        <div class="wallet-widget-f">
-            <input type="text" value="{{ wallet.address }}" readonly="true" onclick="copyAddr(event)">
-        </div>
-    </article>
-{% endfor %}
-*/
 impl Component for Donate {
     type Message = ();
     type Properties = ();
