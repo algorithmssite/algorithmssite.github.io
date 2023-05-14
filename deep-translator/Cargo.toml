@@ -1,0 +1,37 @@
+[package]
+name = "deep-translator"
+version = "0.8.0"
+edition = "2021"
+license = "MIT"
+description = "translate between different languages using multiple translators"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "deeptrans"
+crate-type = ["cdylib", "rlib"]
+
+
+[dependencies]
+reqwest = { version = "0.11", features = ["json"] }
+serde   = { version = "1", features = ["derive"] }
+serde_json = "1.0.86"
+clap       = "3.2.22"
+scraper    = "0.13.0"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio   = { version = "1", features = ["full"] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+gloo-utils = "0.1.6"
+wasm-bindgen-futures = "0.4.34"
+wasm-bindgen = { version = "0.2.84", features = ["serde-serialize"] }
+js-sys = "0.3.61"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies.web-sys]
+version = "0.3.61"
+features = [
+    "Document", "Window", "HtmlElement", "DomRect", "Element", "Node", "NodeList",
+    "CssStyleDeclaration", "Response", "XmlHttpRequest", "HtmlLinkElement",
+    "HtmlDocument", "HtmlInputElement", "Location", "FormData", "HtmlFormElement",
+    "RequestInit", "Request", "Response", "HtmlScriptElement"
+]

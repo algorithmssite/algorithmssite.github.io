@@ -20,7 +20,7 @@ impl Component for Home {
 
         html! {
             <>
-                <article class="welcome" style={ format!("height: {}px;", height) }>
+                <article class="welcome" style={ format!("height: {height}px;") }>
                     <h1> {"Welcome to"} </h1>
                     <h1> {"Official Algorithm Site Community Web Site"} </h1>
                 </article>

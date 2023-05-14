@@ -53,7 +53,7 @@ impl Component for Wallet {
     fn create(ctx: &Context<Self>) -> Self {
         ctx.props().clone()
     }
-    
+
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <article class="wallet-widget">
@@ -69,7 +69,7 @@ impl Component for Wallet {
                 <div class="wallet-widget-f">
                     <input
                         type="text"
-                        value={ format!("{}", ctx.props().address.clone()) }
+                        value={ ctx.props().address.to_string() }
                         readonly=true
                         onclick={ctx.link().callback(|event| { copy_addr(event).unwrap(); } )}
                     />

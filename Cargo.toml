@@ -7,9 +7,11 @@ edition = "2021"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-yew = "*"
+yew = { version = "*", features = ["csr"] }
 wasm-bindgen = "*"
 js-sys = "*"
+deep-translator = { path = "./deep-translator" }
+wasm-bindgen-futures = "0.4.34"
 
 [dependencies.web-sys]
 version = "*"

@@ -1,8 +1,11 @@
+/axios
 /public
 /target
 /node_modules
 /scripts
-/Cargo.lock
+Cargo.lock
 /package-lock.json
 /inside.md
 /pkg
+/target
+deep-translator/target

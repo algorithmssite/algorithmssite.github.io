@@ -3,7 +3,7 @@ mod components;
 use components::*;
 use wasm_bindgen::{prelude::*, JsCast};
 use web_sys::Element;
-use yew::prelude::*;
+use yew::{prelude::*, Renderer};
 
 #[macro_export]
 macro_rules! console_log {
@@ -119,7 +119,7 @@ impl Component for App {
         true
     }
 
-    fn changed(&mut self, _ctx: &Context<Self>) -> bool {
+    fn changed(&mut self, _ctx: &Context<Self>, _props: &Self::Properties) -> bool {
         // Should only return "true" if new properties are different to
         // previously received properties.
         // This component has no properties so we will always return "false".
@@ -153,7 +153,7 @@ impl Component for App {
                 >
                 <span> {"Articles"} </span>
                 </button>
-                
+
                 <button class="custom-button-flat pulse-info"
                     onclick={ctx.link().callback(|_| Section::Donate)}
                 >
@@ -221,7 +221,7 @@ impl ScrollState {
 }
 
 #[wasm_bindgen(start)]
-pub fn run() -> Result<(), JsValue> {
+pub async fn run() -> Result<(), JsValue> {
     let document = web_sys::window().unwrap().document().unwrap();
     let mut scroll_state = ScrollState { position: 0.0 };
 
@@ -229,8 +229,26 @@ pub fn run() -> Result<(), JsValue> {
         Closure::wrap(Box::new(move || scroll_state.update().unwrap()) as Box<dyn FnMut()>);
     document.set_onscroll(Some(closure.as_ref().unchecked_ref()));
 
-    closure.forget(); // Important!!!
-    yew::start_app::<App>();
+    closure.forget(); // Important !!!
+    Renderer::<App>::new().render();
+
+    // navigator.language it-IT
+
+    let translator = deeptrans::Translator::default();
+    /* console_log!(
+        "Translation: {:?}",
+        r#"translator
+            .translate("Il giorno non arriva si non c'è sei tu")
+            .await"#
+    ); */
+
+    let translation = translator
+            .translate("Il giorno non arriva si non c'è sei tu")
+            .await;
+
+    // has been blocked by CORS policy: 
+    // No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+    console_log!("{:?}", translation);
 
     Ok(())
 }
