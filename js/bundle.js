@@ -838,7 +838,7 @@ var exports = /*#__PURE__*/Object.freeze({
     run: run
 });
 
-const wasm_path = "js/assets/algorithmssite_page-CgR2N7-x.wasm";
+const wasm_path = "js/assets/algorithmssite_page-HJ6NoQD1.wasm";
 
             
             var app = async (opt = {}) => {
