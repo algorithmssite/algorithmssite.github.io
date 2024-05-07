@@ -7,8 +7,8 @@
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d public -b gh-pages",
-    "start": "rollup index.js -c -w",
-    "build": "rollup index.js -c"
+    "start": "rollup -c -w",
+    "build": "rollup -c"
   },
   "devDependencies": {
     "@wasm-tool/rollup-plugin-rust": "^2.4.5",
@@ -17,6 +17,7 @@
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-sass": "^1.12.22",
+    "rollup-plugin-serve": "^1.1.1",
     "sass": "^1.77.0"
   }
 }

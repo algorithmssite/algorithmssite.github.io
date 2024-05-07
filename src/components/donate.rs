@@ -1,10 +1,8 @@
 use js_sys::{Function, Reflect};
 use wasm_bindgen::{prelude::*, JsCast};
 use yew::{html, prelude::*, Component, Context, Html};
-// use wasm_bindgen_futures::JsFuture;
 use web_sys::*;
 
-// #[wasm_bindgen]
 pub fn copy_addr(event: MouseEvent) -> Result<bool, JsValue> {
     let document = web_sys::window().unwrap().document().unwrap();
 
