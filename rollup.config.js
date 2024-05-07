@@ -6,7 +6,7 @@ import servePlugin from 'rollup-plugin-serve';
 
 const production = !process.env.ROLLUP_WATCH;
 
-export default {
+const config = {
   input: {
     bundle: "index.js",
   },
@@ -29,6 +29,11 @@ export default {
       // If you specify true, the plugin will insert compiled CSS into <head/> tag.
       insert: true,
     }),
+    ,
+  ]
+}
+if (!production) {
+  config.plugins = config.plugins.concat([
     servePlugin({
       contentBase: 'public',
       headers: {
@@ -38,6 +43,8 @@ export default {
 
     // Watch the `public` directory and refresh the
     // browser on changes when not in production
-    !production && livereloadPlugin('public'),
-  ]
+    livereloadPlugin('public')
+  ])
 }
+
+export default config;

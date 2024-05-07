@@ -139,7 +139,7 @@ impl Component for App {
         html! {
           <>
             <header>
-            <img alt="page logo" src="images/logo2.svg" />
+            <img alt="page logo" src="images/logo2.jpg" />
 
             <div class="menu-container">
                 <button class="custom-button-flat-select pulse-info"

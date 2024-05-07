@@ -107,23 +107,12 @@ impl Component for Donate {
                 </div>
                 <div id="wallets-container">
                 <Wallet
-                    address={ "MTUK1HECukkoPUA14mqmJ2JjGKqA6QPHqG".to_string() }
-                    coin= { "Litecoin".to_string() }
-                    coin_alias={ "LTC".to_string() }
-                    icon={ "litecoin.png".to_string() }
+                    address={ "TLeCcfpyuCMx11spzbDDGCd9zCwruWTzzm".to_string() }
+                    coin= { "TetherUS".to_string() }
+                    coin_alias={ "USDT (TRC20)".to_string() }
+                    icon={ "tetherus.png".to_string() }
                 />
-                <Wallet
-                    address={ "1M3ENrAY2Coqvz1UbPpbtBitt99kJSVHXV".to_string() }
-                    coin={ "Bitcoin".to_string() }
-                    coin_alias={ "BTC".to_string() }
-                    icon={ "bitcoin.png".to_string() }
-                />
-                <Wallet
-                    address={ "0xC60C3F05D612e344a5346BC1870327c7DD560FE7".to_string() }
-                    coin={ "Tether".to_string() }
-                    coin_alias= { "USDT".to_string() }
-                    icon={ "tether.png".to_string() }
-                />
+                
                 </div>
             </>
         }
