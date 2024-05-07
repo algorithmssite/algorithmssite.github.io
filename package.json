@@ -3,19 +3,20 @@
   "version": "1.0.0",
   "private": true,
   "homepage": "https://algorithmssite.github.io",
+  "type": "module",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d public -b gh-pages",
-    "start": "rollup -c -w",
-    "build": "rollup -c"
+    "start": "rollup index.js -c -w",
+    "build": "rollup index.js -c"
   },
   "devDependencies": {
-    "@wasm-tool/rollup-plugin-rust": "^2.2.2",
-    "gh-pages": "^4.0.0",
-    "rollup": "^2.3.4",
-    "rollup-plugin-copy": "^3.4.0",
-    "rollup-plugin-livereload": "^2.0.0",
-    "rollup-plugin-sass": "^1.2.13",
-    "sass": "^1.54.0"
+    "@wasm-tool/rollup-plugin-rust": "^2.4.5",
+    "gh-pages": "^6.1.1",
+    "rollup": "^4.17.2",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-livereload": "^2.0.5",
+    "rollup-plugin-sass": "^1.12.22",
+    "sass": "^1.77.0"
   }
 }

@@ -31,6 +31,10 @@ npm run start
 basic-http-server public
 ```
 
+## Update dependencies
+```
+npx npm-check-updates
+```
 ## Components
 
 This website uses Node.js for its deployment, it takes care of copying the HTML files to the public folder, packaging the crate and sass stylesheets, into HTML files to the public folder, packaging the crate and sass stylesheets into a single file to result in a static website where JS usage is minimal.  In this project, unlike traditional static websites, we use Rust for the frontend and the stylesheets are written in sass.

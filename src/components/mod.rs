@@ -2,6 +2,5 @@ mod article;
 mod donate;
 mod home;
 
-pub use article::Articles;
-pub use donate::Donate;
-pub use home::Home;
+pub use self::{article::Articles, donate::Donate, home::Home};
+

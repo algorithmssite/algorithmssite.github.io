@@ -7,7 +7,7 @@ const production = !process.env.ROLLUP_WATCH;
 
 export default {
   input: {
-    bundle: "main.js",
+    bundle: "main.mjs",
   },
   output: {
     dir: "public/js",

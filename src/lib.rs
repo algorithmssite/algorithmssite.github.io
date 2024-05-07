@@ -232,23 +232,6 @@ pub async fn run() -> Result<(), JsValue> {
     closure.forget(); // Important !!!
     Renderer::<App>::new().render();
 
-    // navigator.language it-IT
-
-    let translator = deeptrans::Translator::default();
-    /* console_log!(
-        "Translation: {:?}",
-        r#"translator
-            .translate("Il giorno non arriva si non c'è sei tu")
-            .await"#
-    ); */
-
-    let translation = translator
-            .translate("Il giorno non arriva si non c'è sei tu")
-            .await;
-
-    // has been blocked by CORS policy: 
-    // No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
-    console_log!("{:?}", translation);
 
     Ok(())
 }

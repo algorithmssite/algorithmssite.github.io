@@ -7,17 +7,21 @@ edition = "2021"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-yew = { version = "*", features = ["csr"] }
-wasm-bindgen = "*"
-js-sys = "*"
-deep-translator = { path = "./deep-translator" }
-wasm-bindgen-futures = "0.4.34"
+js-sys = "0.3.69"
+wasm-bindgen = "0.2.92"
+wasm-bindgen-futures = "0.4.42"
+
+
+[dependencies.yew]
+version = "0.20.0"
+features = ["csr"]
 
 [dependencies.web-sys]
-version = "*"
+version = "0.3.69"
 features = [
     "Document", "Window", "HtmlElement", "DomRect", "Element", "Node", "NodeList",
     "CssStyleDeclaration", "Response", "XmlHttpRequest", "HtmlLinkElement",
     "HtmlDocument", "HtmlInputElement", "Location", "FormData", "HtmlFormElement",
     "RequestInit", "Request", "Response", "HtmlScriptElement"
 ]
+
