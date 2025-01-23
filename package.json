@@ -11,13 +11,14 @@
     "build": "rollup -c"
   },
   "devDependencies": {
-    "@wasm-tool/rollup-plugin-rust": "^2.4.5",
-    "gh-pages": "^6.1.1",
-    "rollup": "^4.17.2",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@wasm-tool/rollup-plugin-rust": "^3.0.1",
+    "gh-pages": "^6.3.0",
+    "rollup": "^4.31.0",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-livereload": "^2.0.5",
-    "rollup-plugin-sass": "^1.12.22",
+    "rollup-plugin-sass": "^1.15.2",
     "rollup-plugin-serve": "^1.1.1",
-    "sass": "^1.77.0"
+    "sass": "^1.83.4"
   }
 }

@@ -3,12 +3,14 @@ import copyPlugin from "rollup-plugin-copy";
 import sassPlugin from 'rollup-plugin-sass';
 import livereloadPlugin from 'rollup-plugin-livereload';
 import servePlugin from 'rollup-plugin-serve';
+import { terserPlugin } from "rollup-plugin-terser";
 
-const production = !process.env.ROLLUP_WATCH;
+const is_watch = !!process.env.ROLLUP_WATCH;
 
 const config = {
   input: {
     bundle: "index.js",
+    "algorithmssite-page": "Cargo.toml",
   },
   output: {
     dir: "public/js",
@@ -22,19 +24,19 @@ const config = {
         { src: "assets/images", dest: "public/" },
       ]
     }),
-    rustPlugin({
-      serverPath: "js/",
-    }),
+    rustPlugin({}),
     sassPlugin({
       // If you specify true, the plugin will insert compiled CSS into <head/> tag.
       insert: true,
     }),
-    ,
+
+    !is_watch && terserPlugin(),
   ]
 }
-if (!production) {
+if (is_watch) {
   config.plugins = config.plugins.concat([
     servePlugin({
+      open: true,
       contentBase: 'public',
       headers: {
         'Access-Control-Allow-Origin': '*',

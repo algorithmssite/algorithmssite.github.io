@@ -13,7 +13,7 @@ wasm-bindgen-futures = "0.4.42"
 
 
 [dependencies.yew]
-version = "0.20.0"
+version = "0.20"
 features = ["csr"]
 
 [dependencies.web-sys]
